@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Please sign in on etherpad: https://pad.carpentries.org/2020-09-10-06-r2 
+
 ## Episode data types 
 
 * Download and read file in
@@ -23,9 +25,8 @@ gapminder <- read.csv("data/gapminder_data.csv")
 
 ## We can also read in file from web
 
-```{r}
+```{r eval=FALSE}
 gapminder <- read.csv("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_data.csv")
-
 ```
 
 * What do we have, we can run the `str()` function on any R object: 
