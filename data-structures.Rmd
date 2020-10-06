@@ -33,7 +33,7 @@ str(gapminder) #str stands for structure
 
 * We can get it to open up in a tab in RStudio a couple of ways: 
 
-```{r}
+```{r eval=FALSE}
 
 View(gapminder) #to look at it in a tab 
 
@@ -299,8 +299,9 @@ But if not:
 
 ```{r eval=FALSE}
 install.packages("ggplot2")
+```
+```{r}
 library("ggplot2")
-
 ```
 
 * We will go over more of **ggplot2** tomorrow. 
