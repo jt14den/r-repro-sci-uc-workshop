@@ -131,7 +131,7 @@ summary(gapminder$country) # tell us lenght of character vector
 * But we want a diff summary, we'd lke to count up the occurances of our country. 
 * To do this we need to convert the country vector to a factor. What's a factor? categorical variable, e.g. colors, breeds of dogs 
 
-```{r}
+```{r eval=FALSE}
 factor(gapminder$country)
 ```
 
@@ -322,7 +322,10 @@ How to use with gapminder:
 gapminder[gapminder$country %in% seAsia, ]
 ```
 
-### Challenges
+### Challenges (15 min)
+
+Instructions: 
+We will group you up in room. Select one person to drive the computer, the others will give instructions on how to solve the problems. The driver shares their screen. Switch up half way thru for fun. 
 
 <https://docs.google.com/document/d/1TrX2BVMB0VpMTYvA--nXj6joy8cRDZz5Zy8zhHHu9-I/edit#>
 
