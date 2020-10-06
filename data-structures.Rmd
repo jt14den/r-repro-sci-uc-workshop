@@ -1,0 +1,348 @@
+---
+title: "Intro R"
+author: "Tim Dennis"
+date: "10/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Episode data types 
+
+* Download and read file in
+
+```{r}
+download.file("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_data.csv", destfile = "data/gapminder_data.csv")
+gapminder <- read.csv("data/gapminder_data.csv")
+```
+
+## We can also read in file from web
+
+```{r}
+gapminder <- read.csv("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_data.csv")
+
+```
+
+* What do we have, we can run the `str()` function on any R object: 
+
+```{r}
+str(gapminder) #str stands for structure 
+```
+
+* We can get it to open up in a tab in RStudio a couple of ways: 
+
+```{r}
+
+View(gapminder) #to look at it in a tab 
+
+```
+
+## Data types 
+
+R has a few data types it is good be aware of: 
+
+```{r}
+typeof(gapminder$year)
+typeof(gapminder$lifeExp)
+typeof(3.14)
+typeof(TRUE)  # logical 
+typeof(1L) # The L suffix forces the number to be an integer, since by default R uses float numbers
+typeof('bannana')
+class(gapminder)
+typeof(gapminder$continent)
+typeof(gapminder$country) #character
+
+```
+
+* No matter how complicated our analyses become, all data in R is interpreted as one of these basic data types. 
+* This strictness has some really important consequences.
+
+```{r}
+typeof(gapminder$year)
+```
+
+## Vectors 
+
+* Let's step back and talk a bit about vectors. 
+* Dataframes are a collection of vectors 
+* Vectors can only be of one type. 
+* When we create vectors this has important consequences - R will coerce types to be the same.
+* lets create some vectors:
+
+```{r}
+x <- c(1, 2.4, 3, 5) #what's the <- again?
+x
+str(x)
+typeof(x)
+```
+**Couple of things**
+* the `c()` function is used in R a lot - stands for combine and it will create a vector
+* there are other ways to create a vector but we use this a lot. 
+* what happens if we create a mixed vector
+
+
+```{r}
+y = c("dog", 1.4, 3.5, TRUE)
+y
+str(y)
+typeof(y)
+```
+
+* What happened? 
+* Yes, R converted this vector to all characters, but quotes around them. 
+* This is b/c it wouldn't know how to convert dog or TRUE to numbers. 
+* The coercion rules go: logical -> integer -> numeric -> complex -> character, where -> can be read as are transformed into.
+* R has a number of functions that converts vectors between types, sometimes we need to do this, esp. if on read you data is something not expected.
+* `as.numeric`, `as.logical`, `as.character`
+
+```{r}
+char_vector_nums <- c('1','2','3')
+```
+
+```{r}
+typeof(as.numeric(char_vector_nums))
+```
+
+
+## Data structures = realistic example 
+
+```{r}
+str(gapminder)
+summary(gapminder$country)
+```
+
+* What happened here? 
+* Let's look up some help? What should i Run? 
+
+```{r}
+?summary
+```
+
+```{r}
+summary(gapminder$country) # tell us lenght of character vector 
+
+```
+
+* But we want a diff summary, we'd lke to count up the occurances of our country. 
+* To do this we need to convert the country vector to a factor. What's a factor? categorical variable, e.g. colors, breeds of dogs 
+
+```{r}
+factor(gapminder$country)
+```
+
+* Note at the end, we can see 142 levels (or categories). Let's add this to our summary; how? 
+
+```{r}
+summary(factor(gapminder$country))
+```
+
+* Now what if we want to permanently save `country` as a factor. 
+* We might not need to do this in in a real case b/c w can always do on the fly if needed, but we could need to do it so we can alter levels (they could be ordinal). 
+
+* Let's add the factor version of `country` at the end of gapminder as a new column. How would you think we do that? 
+
+```{r}
+gapminder$countr_fac <- factor(gapminder$country)
+```
+
+```{r}
+str(gapminder)
+```
+
+* Notice the difference. 
+
+* Ok let's look at some helpful methods to inspect the data. 
+
+```{r}
+typeof(gapminder$year)
+typeof(gapminder$country)
+str(gapminder$country)
+str(gapminder$countr_fac)
+length(gapminder)
+typeof(gapminder)
+```
+
+* What's a list?? a data structure can be thought of as a container of many different types of objects. 
+* All dataframes in R under the hood are list.
+* But lists are important in R to be aware of b/c complex objects are lists
+* This can include how statistical models are represented or plots 
+
+Let's explore some other functions we can use to inspect dataframes: 
+
+```{r}
+nrow(gapminder)
+ncol(gapminder)
+dim(gapminder)
+colnames(gapminder)
+head(gapminder)
+```
+
+## Subsetting 
+
+* What's a column in a data frame, again? 
+
+* Right, it's a vector. Let's pull out a column as a vector by itself and explore how we subset vectors. 
+
+```{r}
+life_exp <- gapminder[['lifeExp']]
+```
+
+```{r}
+str(life_exp)
+```
+* let's get the first element: 
+
+```{r}
+life_exp[1]
+```
+* hwat about elements 3 & 7
+```{r}
+life_exp[c(3,7)]
+```
+* we use the `c` function here
+* what about a series or sequence? 
+* first let's see how to do one in R
+```{r}
+1:4
+```
+* Note this will expand to [1,2,3,4]
+```{r}
+life_exp[1:4]
+```
+* to skip we use negatives
+```{r eval=FALSE}
+life_exp[-1:4]
+```
+Why didnt that work? 
+Yes, -1:4 expands to -1,0,1,2,3,4
+```{r}
+-1:4
+```
+```{r eval=FALSE}
+life_exp[-(1:4)]
+```
+Also works: 
+```{r eval=FALSE}
+life_exp[-c(1:4)]
+```
+
+### Data frames 
+* Bracket notation - if we use a single bracket with number, it will return
+* Single column as a dataframe
+
+```{r}
+head(gapminder[3])
+```
+
+```{r}
+str(gapminder[3])
+```
+
+However if we use [[3]] it'll return the column as a vector 
+
+```{r}
+head(gapminder[[3]])
+head(gapminder[["lifeExp"]])
+```
+
+```{r}
+str(gapminder[[3]])
+```
+
+A vector. 
+
+Think about it via this image: 
+
+![Peeling onion](https://bookdown.org/ajkurz/DBDA_recoded/pics/pepper_list.png)
+
+`$` dollar sign can pull out a column by name. A lot easier to remember names than their numbers. 
+
+```{r}
+head(gapminder$year)
+
+```
+
+We can pull out by rows and columns by using two arguments in `[]`
+
+```{r}
+gapminder[1:3,] #row 1-3 and all columns
+gapminder[3,] #   
+gapminder[3:10, 1:3]
+```
+
+Let's subset gapminder and only include data from 87
+
+```{r eval=FALSE}
+gapminder[gapminder$year == 1987, ]
+```
+
+How about population greater than 15,000,000
+
+```{r eval=FALSE}
+gapminder[gapminder$pop >= 15000000,]
+
+```
+
+### Challenges
+
+<https://docs.google.com/document/d/1TrX2BVMB0VpMTYvA--nXj6joy8cRDZz5Zy8zhHHu9-I/edit#>
+
+
+## GGPLOT2 - 30min or less 
+
+* R-base has a plot function but less intuitive:   `plot()`
+* Ggplot2 should have been installed
+
+But if not:
+
+```{r eval=FALSE}
+install.packages("ggplot2")
+library("ggplot2")
+
+```
+
+* We will go over more of **ggplot2** tomorrow. 
+* grammar of graphics - a way to express plots are layers of data and their visual expressions on a plot
+* We select the data, map it to axis and tell ggplot how to represent it.
+
+```{r}
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
+  geom_point()
+```
+
+* we can transform the axis using a log10 scale 
+
+```{r}
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(alpha = 0.5) + scale_x_log10()
+```
+
+```{r}
+ggplot(data = gapminder, mapping = aes(x=year, y=lifeExp, by=country, color=continent)) +
+  geom_line()
+```
+
+Make the points stand out:
+
+```{r}
+ggplot(data = gapminder, mapping = aes(x=year, y=lifeExp, by=country)) +
+  geom_line(mapping = aes(color=continent)) + geom_point()
+```
+
+```{r}
+ggplot(data = gapminder, mapping = aes(x=year, y=lifeExp, by=country, color=continent)) +
+  geom_line() + geom_point()
+```
+```{r}
+americas <- gapminder[gapminder$continent == "Americas",] #subset
+ggplot(data = americas, mapping = aes(x = year, y = lifeExp)) +
+  geom_line() +
+  facet_wrap( ~ country) +
+  theme(axis.text.x = element_text(angle = 45))
+```
+You'll get hands-on tomorrow with Stephanie. 
+Thanks everyone! 
+
+
