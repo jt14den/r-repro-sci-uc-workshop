@@ -13,8 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 * Download and read file in
 
-```{r}
+```{r eval=FALSE}
 download.file("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/gh-pages/_episodes_rmd/data/gapminder_data.csv", destfile = "data/gapminder_data.csv")
+```
+
+```{r}
 gapminder <- read.csv("data/gapminder_data.csv")
 ```
 
@@ -283,6 +286,40 @@ How about population greater than 15,000,000
 ```{r eval=FALSE}
 gapminder[gapminder$pop >= 15000000,]
 
+```
+
+### Selecting elements of a vector: 
+
+* Selecting elements of a vector that match any of a list of components is a very common data analysis task
+* gapminder data set contains country and continent variables 
+* Suppose we want to pull out information from southeast Asia: 
+* how do we set up an operation to produce a logical vector that is TRUE for all of the countries in southeast Asia and FALSE otherwise?
+* Let's walk thru this together & follow along: 
+
+```{r}
+seAsia <- c("Myanmar","Thailand","Cambodia","Vietnam","Laos")
+## extract the `country` column from a data frame (we'll see this later);
+## convert from a factor to a character;
+## and get just the non-repeated elements
+countries <- unique(gapminder$country)
+```
+
+One way: 
+
+```{r}
+(countries=="Myanmar" | countries=="Thailand" |
+ countries=="Cambodia" | countries == "Vietnam" | countries=="Laos") 
+```
+
+More elegant way and better way:  
+
+```{r}
+countries %in% seAsia
+```
+How to use with gapminder: 
+
+```{r}
+gapminder[gapminder$country %in% seAsia, ]
 ```
 
 ### Challenges
